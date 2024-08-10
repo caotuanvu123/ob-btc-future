@@ -1,7 +1,8 @@
 #!/bin/bash
 sleep 40
 
-REPO_PATH=$(pwd)
+#REPO_PATH=$(pwd)
+REPO_PATH="/home/u/Documents/product_2024/ob-btc-future/"
 cd "$REPO_PATH" || { echo "Cannot change directory to $REPO_PATH"; exit 1; }
 
 NOW=$(date +"%Y-%m-%d %H:%M:%S")
