@@ -7780,13 +7780,13 @@
 
     
         if (previousPrice) {
-          console.log(`Symbol: ${symbol}`);
-          console.log(`Previous Price: ${previousPrice}`);
-          console.log(`Current Price: ${price}`);
+        //   console.log(`Symbol: ${symbol}`);
+        //   console.log(`Previous Price: ${previousPrice}`);
+        //   console.log(`Current Price: ${price}`);
           updatePriceColors(element, previousPrice, price);
         } else {
-          console.log(`Symbol: ${symbol}`);
-          console.log(`Current Price: ${price}`);
+        //   console.log(`Symbol: ${symbol}`);
+        //   console.log(`Current Price: ${price}`);
         }
       }
     }
@@ -7811,9 +7811,9 @@
     const currentPriceValue = parseFloat(currentPrice);
 
     // Log giá trước và sau khi cập nhật màu sắc
-    console.log(`Price Comparison for Element: ${element.getAttribute('data-symbol')}`);
-    console.log(`Previous Price: ${previousPriceValue}`);
-    console.log(`Current Price: ${currentPriceValue}`);
+    // console.log(`Price Comparison for Element: ${element.getAttribute('data-symbol')}`);
+    // console.log(`Previous Price: ${previousPriceValue}`);
+    // console.log(`Current Price: ${currentPriceValue}`);
 
     if (currentPriceValue > previousPriceValue) {
       element.style.color = 'green';
@@ -7913,6 +7913,11 @@
     let bidsData = {};
     let asksData = {};
     let labels = [];
+
+    let totalValue = 0;
+    let totalValueBids = 0;
+    let totalValueAsks = 0;
+    
     let tableBody = document.getElementById(`${coinType}DataTable`); //Replace 'btcDataTable' with your table id
 
     const csvFilePath = `csv/futures/future_order_book_${coinType}usdt_${selectedDate}.csv`;
@@ -7937,7 +7942,6 @@
                 tableBody.innerHTML = ''; // Clear previous table rows
 
                 rows.reverse();
-
                 rows.forEach(row => {
                   const columns = row.split(',');
                   if (columns.length === 5) {
@@ -7957,13 +7961,14 @@
                             bidsData[price] = 0;
                           }
                           bidsData[price] += quantity;
+                          totalValueBids += price * quantity
 
                         } else if (type === 'ask') {
                           if (!asksData[price]) {
                             asksData[price] = 0;
                           }
                           asksData[price] += quantity;
-                          
+                          totalValueAsks += price * quantity
                         }
 
                         if (!labels.includes(price)) {
@@ -7991,8 +7996,12 @@
                     }
                   }
                 });
-
-
+        
+            document.getElementById(`total_value_${coinType}`).innerHTML = totalValueAsks + totalBids
+            document.getElementById(`total_value_${coinType}_bids`).innerHTML = totalBids
+            document.getElementById(`total_value_${coinType}_asks`).innerHTML = totalAsks
+            console.log(`cointy ${coinType}`)
+        
           labels.sort((a, b) => a - b);
 
           const bidsChartData = labels.map(price => bidsData[price] || 0);
@@ -8012,7 +8021,7 @@
             chartInstances['myPieChart' + coinType].destroy();
           }
 
-
+        console.log(1222222222222222222222)
           chartInstances['bidsChart' + coinType] = new Chart(bidsCtx, {
             type: 'bar',
             data: {
