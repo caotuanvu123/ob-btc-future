@@ -4698,19 +4698,13 @@
 
                       <!-- Title -->
                       <h6 class="text-uppercase text-body-secondary mb-2">
-                        Total hours
+                        Total Value
                       </h6>
 
                       <!-- Heading -->
-                      <span class="h2 mb-0">
-                        763.5
+                      <span id="total_value_btc" class="h2 mb-0">
+                        763.533.422332
                       </span>
-
-                    </div>
-                    <div class="col-auto">
-
-                      <!-- Icon -->
-                      <span class="h2 fe fe-briefcase text-body-secondary mb-0"></span>
 
                     </div>
                   </div> <!-- / .row -->
@@ -4728,21 +4722,13 @@
 
                       <!-- Title -->
                       <h6 class="text-uppercase text-body-secondary mb-2">
-                        Exit %
+                        Total Value Bids
                       </h6>
 
                       <!-- Heading -->
-                      <span class="h2 mb-0">
-                        35.5%
+                      <span id="total_value_btc_bids" class="h2 mb-0">
+                        1212312312312123
                       </span>
-
-                    </div>
-                    <div class="col-auto">
-
-                      <!-- Chart -->
-                      <div class="chart chart-sparkline">
-                        <canvas class="chart-canvas" id="sparklineChart"></canvas>
-                      </div>
 
                     </div>
                   </div> <!-- / .row -->
@@ -4757,23 +4743,14 @@
                 <div class="card-body">
                   <div class="row align-items-center gx-0">
                     <div class="col">
-
                       <!-- Title -->
                       <h6 class="text-uppercase text-body-secondary mb-2">
-                        Avg. Time
+                        Total Value Asks
                       </h6>
-
                       <!-- Heading -->
-                      <span class="h2 mb-0">
+                      <span id="total_value_btc_asks" class="h2 mb-0">
                         2:37
                       </span>
-
-                    </div>
-                    <div class="col-auto">
-
-                      <!-- Icon -->
-                      <span class="h2 fe fe-clock text-body-secondary mb-0"></span>
-
                     </div>
                   </div> <!-- / .row -->
                 </div>
@@ -4848,10 +4825,9 @@
               <!-- Projects -->
               <div class="card card-fill">
                 <div class="card-header">
-
                   <!-- Title -->
                   <h4 class="card-header-title">
-                    Top OB
+                    Top OB Ordering
                   </h4>
                 </div>
                 <div class="card-body" style="margin-top: 0px;">
@@ -7981,12 +7957,15 @@
                             bidsData[price] = 0;
                           }
                           bidsData[price] += quantity;
+
                         } else if (type === 'ask') {
                           if (!asksData[price]) {
                             asksData[price] = 0;
                           }
                           asksData[price] += quantity;
+                          
                         }
+
                         if (!labels.includes(price)) {
                           labels.push(price);
                         }
