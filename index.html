@@ -4813,80 +4813,56 @@
                 <div class="card-header">
 
                   <!-- Title -->
-                  <h4 class="card-header-title">
-                    PIE FUTURES BTC
+                  <h4 class="card-header-title" style="color: red;">
+                    TOP POSITIONS
                   </h4>
                 </div>
                 <div class="card-body">
-
-                  <!-- Chart -->
-                  <div class="chart chart-appended">
-                    <canvas id="myPieChartbtc"></canvas>
+                  <div class="list-group list-group-flush my-n3" id="tableContainerPosition"
+                     style="max-height: 324px; overflow-y: auto; position: relative;  max-width: 100%; overflow-x: hidden; ">
+                    <table class="table table-striped" style=" table-layout: fixed; width: 100%; ">
+                      <tr>
+                        <thead class="thead-light" style=" max-width: 100%" >
+                        <th style="position: sticky; top: 0; font-size: 9px;">
+                          <a href="#" class="text-body-secondary list-sort" data-sort="time">
+                            Time
+                          </a>
+                        </th>
+                        <th style="position: sticky; top: 0; font-size: 9px;">
+                          <a href="#" class="text-body-secondary list-sort" data-sort="time">
+                            Symbol
+                          </a>
+                        </th>
+                        <th style="position: sticky; top: 0; font-size: 9px;">
+                          <a href="#" class="text-body-secondary list-sort" data-sort="type">
+                            Type
+                          </a>
+                        </th>
+                        <th style="position: sticky; top: 0; font-size: 9px;">
+                          <a href="#" class="text-body-secondary list-sort" data-sort="quantity">
+                            Price
+                          </a>
+                        </th>
+                        <th style="position: sticky; top: 0; font-size: 9px;">
+                          <a href="#" class="text-body-secondary list-sort" data-sort="price">
+                            Quantity
+                          </a>
+                        </th>
+                        <th style="position: sticky; top: 0; font-size: 9px; ">
+                          <a href="#" class="text-body-secondary list-sort" data-sort="totalValue">
+                            Total Value
+                          </a>
+                        </th>
+                      </tr>
+                      </thead>
+                      <tbody id="btcDataTablePosition" style="font-size: 10px; max-width: 100%; ">
+                      </tbody>
+                    </table>
                   </div>
-
-                  <!-- Legend -->
-                  <div id="trafficChartLegend" class="chart-legend"></div>
-
-                </div>
-              </div>
-            </div>
-          </div> <!-- / .row -->
-          <div class="row">
-            <div class="col-12 col-xl-8">
-
-              <!-- Convertions -->
-              <div class="card">
-                <div class="card-header">
-
-                  <!-- Title -->
-                  <h4 class="card-header-title">
-                    CHART POSITIONS
-                  </h4>
-                  <!-- Caption and Selectbox Container -->
-                  <div class="d-flex align-items-center">
-                    <span id="datetime_btc_position" class="text-body-secondary me-3 text-nowrap">
-                      yyyy/mm/dd
-                    </span>
-
-                  <!-- Selectbox for specific dates -->
-                  <select id="dateRangeSelect_btc_position" class="form-select"
-                          onchange="updateChartsBasedOnSelectedDate('btc')">
-                    <!-- Options will be dynamically generated using JavaScript -->
-                  </select>
-                </div>
-
-                </div>
-                <div class="card-body">
-
-                <!-- Chart -->
-                <div class="chart">
-                  <canvas id="bidsChartbtcPosition"></canvas>
-                </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-12 col-xl-4">
-
-              <!-- Traffic -->
-              <div class="card">
-                <div class="card-header">
-
-                  <!-- Title -->
-                  <h4 class="card-header-title">
-                    PIE FUTURES BTC
-                  </h4>
-                </div>
-                <div class="card-body">
-
-                  <!-- Chart -->
-                  <div class="chart chart-appended">
-                    <canvas id="myPieChartbtc"></canvas>
-                  </div>
-
-                  <!-- Legend -->
-                  <div id="trafficChartLegend" class="chart-legend"></div>
-
-                </div>
+                  <!-- List group -->
+                  </div> <!-- / .card-body -->
+                </div> <!-- / .card -->
+                  
               </div>
             </div>
           </div> <!-- / .row -->
@@ -7905,8 +7881,6 @@
     const spanElement = document.getElementById(spanId);
 
     selectElement.addEventListener('change', function () {
-      const selectedDate = this.value;
-      spanElement.textContent = selectedDate;
       updateChartsBasedOnSelectedDate(coinType, selectedDate);
       startUpdatingData(coinType, selectedDate); // Start updating data
     });
@@ -7997,80 +7971,363 @@
   let updateIntervals = {};
 
   function chartShow(coinType, selectedDate) {
+    // let bidsData = {};
+    // let asksData = {};
+    // let labels = [];
+
+    // let totalValue = 0;
+    // let totalValueBids = 0;
+    // let totalValueAsks = 0;
+    
+    // let tableBody = document.getElementById(`${coinType}DataTable`); //Replace 'btcDataTable' with your table id
+
+    // const csvFilePath = `csv/futures/future_order_book_${coinType}usdt_${selectedDate}.csv`;
+    // const addedEntries = new Set();
+
     let bidsData = {};
     let asksData = {};
+    let filledBidsData = {};
+    let filledAsksData = {};
     let labels = [];
 
-    let totalValue = 0;
     let totalValueBids = 0;
     let totalValueAsks = 0;
+    let totalFilledValueBids = 0;
+    let totalFilledValueAsks = 0;
+
+
+    let price_min = Infinity; 
+    let price_max = -Infinity; 
     
-    let tableBody = document.getElementById(`${coinType}DataTable`); //Replace 'btcDataTable' with your table id
+    let tableBody = document.getElementById(`${coinType}DataTable`);
+    let tableBodyPosition = document.getElementById(`${coinType}DataTablePosition`);
 
     const csvFilePath = `csv/futures/future_order_book_${coinType}usdt_${selectedDate}.csv`;
+    const filledCsvFilePath = `csv/futures/filled_order_book/future_order_book_${coinType}usdt_${selectedDate}.csv`; // Đường dẫn đến file chứa filled bids và asks
+
     const addedEntries = new Set();
 
+    // function loadDataAndVisualize() {
+    //   fetch(csvFilePath)
+    //           .then(response => {
+    //             console.log(`Fetching data from: ${csvFilePath}`); // Log path to check
+    //             if (!response.ok) {
+    //               if (!alertShown[coinType]) {
+    //                 alert(`Current data is not available for ${coinType.toUpperCase()} on ${selectedDate}`);
+    //                 alertShown[coinType] = true;
+    //               }
+    //               throw new Error('File not found');
+    //             }
+    //             return response.text();
+    //           })
+    //           .then(data => {
+    //             console.log(`Data fetched for ${coinType}:`, data);
+    //             let rows = data.split('\n');
+    //             tableBody.innerHTML = ''; // Clear previous table rows
+
+    //             rows.reverse();
+    //             rows.forEach(row => {
+    //               const columns = row.split(',');
+    //               if (columns.length === 5) {
+    //                 const time = columns[0];
+    //                 const symbol = columns[1]
+    //                 const quantity = parseFloat(columns[4]);
+    //                 const type = columns[2];
+    //                 const price = parseFloat(columns[3]);
+    //                 const totalValue = price * quantity;
+    //                 const formattedNumber = totalValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+    //                 if (!isNaN(price) && !isNaN(quantity)) {
+    //                   const key = `${type}-${price}-${quantity}`;
+    //                   if (!addedEntries.has(key)) {
+    //                     addedEntries.add(key);
+    //                     if (type === 'bid') {
+    //                       if (!bidsData[price]) {
+    //                         bidsData[price] = 0;
+    //                       }
+    //                       bidsData[price] += quantity;
+    //                       totalValueBids += price * quantity
+
+    //                     } else if (type === 'ask') {
+    //                       if (!asksData[price]) {
+    //                         asksData[price] = 0;
+    //                       }
+    //                       asksData[price] += quantity;
+    //                       totalValueAsks += price * quantity
+    //                     }
+
+    //                     if (!labels.includes(price)) {
+    //                       labels.push(price);
+    //                     }
+
+    //                     // Extract time (hour, minute, and second)
+    //                     const timeParts = time.split(' ');
+    //                     const displayTime = timeParts[1].slice(0, 8); //Get hours, minutes and seconds
+
+    //                     // Tạo hàng mới cho bảng
+    //                     const row = document.createElement('tr');
+    //                     row.className = 'tbody-row'; //  CSS
+    //                     row.innerHTML = `
+    //                                 <td>${displayTime}</td>
+    //                                 <td>${symbol}</td>
+    //                                 <td class="${(type == 'bid' ? 'text-primary' : 'text-danger')}">${String(type).toUpperCase()}</td>
+    //                                 <td>${price}</td>
+    //                                 <td>${quantity}</td>
+    //                                 <td>${formattedNumber}</td>
+    //                             `;
+    //                     tableBody.appendChild(row);
+    //                   }
+
+
+    //                 }
+    //               }
+    //             });
+        
+    //         document.getElementById(`total_value_${coinType}`).innerHTML = (totalValueAsks + totalValueBids).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    //         document.getElementById(`total_value_${coinType}_bids`).innerHTML = totalValueBids.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    //         document.getElementById(`total_value_${coinType}_asks`).innerHTML = totalValueAsks.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        
+    //       labels.sort((a, b) => a - b);
+
+    //       const bidsChartData = labels.map(price => bidsData[price] || 0);
+    //       const asksChartData = labels.map(price => asksData[price] || 0);
+
+    //       const totalBids = bidsChartData.reduce((sum, val) => sum + val, 0);
+    //       const totalAsks = asksChartData.reduce((sum, val) => sum + val, 0);
+    //       const ctx = document.getElementById(`myPieChart${coinType}`).getContext('2d');
+    //       const bidsCtx = document.getElementById(`bidsChart${coinType}`).getContext('2d');
+
+
+    //       if (chartInstances['bidsChart' + coinType]) {
+    //         chartInstances['bidsChart' + coinType].destroy();
+    //       }
+    //       if (chartInstances['myPieChart' + coinType]) {
+    //         chartInstances['myPieChart' + coinType].destroy();
+    //       }
+    //       const price_min = 55000;  // Set your actual minimum price
+    //       const price_max = 61000;  // Set
+
+    //       const bidsColors = labels.map(price => (price >= price_min && price <= price_max) ? 'lightblue' : 'rgba(54, 162, 235, 0.6)');
+    //       const asksColors = labels.map(price => (price >= price_min && price <= price_max) ? 'lightcoral' : 'red');
+
+    //       chartInstances['bidsChart' + coinType] = new Chart(bidsCtx, {
+    //         type: 'bar',
+    //         data: {
+    //           labels: labels,
+    //           datasets: [
+    //             {
+    //               label: 'Bids',
+    //               backgroundColor: bidsColors,
+    //               data: bidsChartData
+    //             },
+    //             {
+    //               label: 'Asks',
+    //               backgroundColor: asksColors,
+    //               data: asksChartData
+    //             }
+    //           ]
+    //         },
+    //         options: {
+    //           responsive: true,
+    //           maintainAspectRatio: false,
+    //           scales: {
+    //             x: {
+    //               title: {
+    //                 display: true,
+    //                 text: 'Price'
+    //               }
+    //             },
+    //             y: {
+    //               title: {
+    //                 display: true,
+    //                 text: 'Quantity'
+    //               }
+    //             }
+    //           },
+    //           plugins: {
+    //             tooltip: {
+    //               callbacks: {
+    //                 label: function (context) {
+    //                   const quantity = context.raw;
+    //                   return `Quantity: ${Math.round(quantity)}`;
+    //                 }
+    //               }
+    //             }
+    //           }
+    //         }
+    //       });
+
+    //       chartInstances['myPieChart' + coinType] = new Chart(ctx, {
+    //         type: 'pie',
+    //         data: {
+    //           labels: ['Asks', 'Bids'],
+    //           datasets: [{
+    //             data: [totalAsks, totalBids],
+    //             backgroundColor: ['#FF6384', '#36A2EB'],
+    //             hoverBackgroundColor: ['#FF6384', '#36A2EB']
+    //           }]
+    //         },
+    //         options: {
+    //           responsive: true,
+    //           plugins: {
+    //             legend: {
+    //               position: 'top',
+    //             },
+    //             tooltip: {
+    //               callbacks: {
+    //                 label: function (tooltipItem) {
+    //                   return tooltipItem.label + ': ' + tooltipItem.raw;
+    //                 }
+    //               }
+    //             }
+    //           }
+    //         }
+    //       });
+
+    //     })
+    //     .catch(error => {
+    //       console.error('Error fetching data:', error);
+
+    //       const bidsCtx = document.getElementById('bidsChart' + coinType).getContext('2d');
+    //       const ctx = document.getElementById('myPieChart' + coinType).getContext('2d');
+
+    //       if (chartInstances['bidsChart' + coinType]) {
+    //         chartInstances['bidsChart' + coinType].destroy();
+    //       }
+    //       if (chartInstances['myPieChart' + coinType]) {
+    //         chartInstances['myPieChart' + coinType].destroy();
+    //       }
+
+    //       chartInstances['bidsChart' + coinType] = new Chart(bidsCtx, {
+    //         type: 'bar',
+    //         data: {
+    //           labels: [],
+    //           datasets: [
+    //             {
+    //               label: 'Bids',
+    //               backgroundColor: 'rgba(54, 162, 235, 0.6)',
+    //               data: []
+    //             },
+    //             {
+    //               label: 'Asks',
+    //               backgroundColor: 'red',
+    //               data: []
+    //             }
+    //           ]
+    //         },
+    //         options: {
+    //           responsive: true,
+    //           maintainAspectRatio: false,
+    //           scales: {
+    //             x: {
+    //               title: {
+    //                 display: true,
+    //                 text: 'Price'
+    //               }
+    //             },
+    //             y: {
+    //               title: {
+    //                 display: true,
+    //                 text: 'Quantity'
+    //               }
+    //             }
+    //           },
+    //           plugins: {
+    //             tooltip: {
+    //               callbacks: {
+    //                 label: function (context) {
+    //                   const quantity = context.raw;
+    //                   return `Quantity: ${quantity}`;
+    //                 }
+    //               }
+    //             }
+    //           }
+    //         }
+    //       });
+
+    //       chartInstances['myPieChart' + coinType] = new Chart(ctx, {
+    //         type: 'pie',
+    //         data: {
+    //           labels: ['Asks', 'Bids'],
+    //           datasets: [{
+    //             data: [0, 0],
+    //             backgroundColor: ['#FF6384', '#36A2EB'],
+    //             hoverBackgroundColor: ['#FF6384', '#36A2EB']
+    //           }]
+    //         },
+    //         options: {
+    //           responsive: true,
+    //           plugins: {
+    //             legend: {
+    //               position: 'top',
+    //             },
+    //             tooltip: {
+    //               callbacks: {
+    //                 label: function (tooltipItem) {
+    //                   return tooltipItem.label + ': ' + tooltipItem.raw;
+    //                 }
+    //               }
+    //             }
+    //           }
+    //         }
+    //       });
+
+    //       chartInstances['bidsChart' + coinType] = bidsChart;
+    //       chartInstances['myPieChart' + coinType] = myPieChart;
+    //     });
+    // }
     function loadDataAndVisualize() {
-      fetch(csvFilePath)
-              .then(response => {
-                console.log(`Fetching data from: ${csvFilePath}`); // Log path to check
+        fetch(csvFilePath)
+            .then(response => {
                 if (!response.ok) {
-                  if (!alertShown[coinType]) {
-                    alert(`Current data is not available for ${coinType.toUpperCase()} on ${selectedDate}`);
-                    alertShown[coinType] = true;
-                  }
-                  throw new Error('File not found');
+                    throw new Error('File not found');
                 }
                 return response.text();
-              })
-              .then(data => {
-                console.log(`Data fetched for ${coinType}:`, data);
+            })
+            .then(data => {
                 let rows = data.split('\n');
-                tableBody.innerHTML = ''; // Clear previous table rows
+                tableBody.innerHTML = '';
 
                 rows.reverse();
                 rows.forEach(row => {
-                  const columns = row.split(',');
-                  if (columns.length === 5) {
-                    const time = columns[0];
-                    const symbol = columns[1]
-                    const quantity = parseFloat(columns[4]);
-                    const type = columns[2];
-                    const price = parseFloat(columns[3]);
-                    const totalValue = price * quantity;
-                    const formattedNumber = totalValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                    const columns = row.split(',');
+                    if (columns.length === 5) {
+                        const time = columns[0];
+                        const symbol = columns[1];
+                        const quantity = parseFloat(columns[4]);
+                        const type = columns[2];
+                        const price = parseFloat(columns[3]);
+                        const totalValue = price * quantity;
+                        const formattedNumber = totalValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-                    if (!isNaN(price) && !isNaN(quantity)) {
-                      const key = `${type}-${price}-${quantity}`;
-                      if (!addedEntries.has(key)) {
-                        addedEntries.add(key);
-                        if (type === 'bid') {
-                          if (!bidsData[price]) {
-                            bidsData[price] = 0;
-                          }
-                          bidsData[price] += quantity;
-                          totalValueBids += price * quantity
+                        if (!isNaN(price) && !isNaN(quantity)) {
+                            const key = `${type}-${price}-${quantity}`;
+                            if (!addedEntries.has(key)) {
+                                addedEntries.add(key);
+                                if (type === 'bid') {
+                                    if (!bidsData[price]) {
+                                        bidsData[price] = 0;
+                                    }
+                                    bidsData[price] += quantity;
+                                    totalValueBids += totalValue;
+                                } else if (type === 'ask') {
+                                    if (!asksData[price]) {
+                                        asksData[price] = 0;
+                                    }
+                                    asksData[price] += quantity;
+                                    totalValueAsks += totalValue;
+                                }
 
-                        } else if (type === 'ask') {
-                          if (!asksData[price]) {
-                            asksData[price] = 0;
-                          }
-                          asksData[price] += quantity;
-                          totalValueAsks += price * quantity
-                        }
+                                if (!labels.includes(price)) {
+                                    labels.push(price);
+                                }
 
-                        if (!labels.includes(price)) {
-                          labels.push(price);
-                        }
+                                const timeParts = time.split(' ');
+                                const displayTime = timeParts[1].slice(0, 8);
 
-                        // Extract time (hour, minute, and second)
-                        const timeParts = time.split(' ');
-                        const displayTime = timeParts[1].slice(0, 8); //Get hours, minutes and seconds
-
-                        // Tạo hàng mới cho bảng
-                        const row = document.createElement('tr');
-                        row.className = 'tbody-row'; //  CSS
-                        row.innerHTML = `
+                                const row = document.createElement('tr');
+                                row.className = 'tbody-row';
+                                row.innerHTML = `
                                     <td>${displayTime}</td>
                                     <td>${symbol}</td>
                                     <td class="${(type == 'bid' ? 'text-primary' : 'text-danger')}">${String(type).toUpperCase()}</td>
@@ -8078,201 +8335,193 @@
                                     <td>${quantity}</td>
                                     <td>${formattedNumber}</td>
                                 `;
-                        tableBody.appendChild(row);
-                      }
-
-
+                                tableBody.appendChild(row);
+                            }
+                        }
                     }
-                  }
                 });
-        
-            document.getElementById(`total_value_${coinType}`).innerHTML = (totalValueAsks + totalValueBids).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-            document.getElementById(`total_value_${coinType}_bids`).innerHTML = totalValueBids.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-            document.getElementById(`total_value_${coinType}_asks`).innerHTML = totalValueAsks.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        
-          labels.sort((a, b) => a - b);
 
-          const bidsChartData = labels.map(price => bidsData[price] || 0);
-          const asksChartData = labels.map(price => asksData[price] || 0);
+                fetch(filledCsvFilePath)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('File not found');
+                        }
+                        return response.text();
+                    })
+                    .then(filledData => {
+                        let filledRows = filledData.split('\n');
+                        tableBodyPosition.innerHTML = '';
 
-          const totalBids = bidsChartData.reduce((sum, val) => sum + val, 0);
-          const totalAsks = asksChartData.reduce((sum, val) => sum + val, 0);
-          const ctx = document.getElementById(`myPieChart${coinType}`).getContext('2d');
-          const bidsCtx = document.getElementById(`bidsChart${coinType}`).getContext('2d');
+                        filledRows.reverse();
+                        filledRows.forEach(row => {
+                            const columns = row.split(',');
+                            if (columns.length === 5) {
+                              const time = columns[0];
+                              const symbol = columns[1];
+                              const quantity = parseFloat(columns[4]);
+                              const type = columns[2];
+                              const price = parseFloat(columns[3]);
+                              const totalValue = price * quantity;
+                              const formattedNumber = totalValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                                if (price < price_min) {
+                                    price_min = price;
+                                }
+                                if (price > price_max) {
+                                    price_max = price;
+                                }
 
+                                if (!isNaN(price) && !isNaN(quantity)) {
+                                    if (type === 'bid') {
+                                        if (!filledBidsData[price]) {
+                                            filledBidsData[price] = 0;
+                                        }
+                                        filledBidsData[price] += quantity;
+                                        totalFilledValueBids += price * quantity;
+                                    } else if (type === 'ask') {
+                                        if (!filledAsksData[price]) {
+                                            filledAsksData[price] = 0;
+                                        }
+                                        filledAsksData[price] += quantity;
+                                        totalFilledValueAsks += price * quantity;
+                                    }
+                                }
 
-          if (chartInstances['bidsChart' + coinType]) {
+                                const timeParts = time.split(' ');
+                                const displayTime = timeParts[1].slice(0, 8);
+
+                                const row = document.createElement('tr');
+                                row.className = 'tbody-row';
+                                row.innerHTML = `
+                                    <td>${displayTime}</td>
+                                    <td>${symbol}</td>
+                                    <td class="${(type == 'bid' ? 'text-primary' : 'text-danger')}">${String(type).toUpperCase()}</td>
+                                    <td>${price}</td>
+                                    <td>${quantity}</td>
+                                    <td>${formattedNumber}</td>
+                                `;
+                                tableBodyPosition.appendChild(row);
+                            }
+                        });
+
+                        updateChartsAndTable();
+                    })
+                    .catch(error => {
+                        console.error('Error fetching filled data:', error);
+                    });
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+    }
+
+    function updateChartsAndTable() {
+        document.getElementById(`total_value_${coinType}`).innerHTML = (totalValueAsks + totalValueBids).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        document.getElementById(`total_value_${coinType}_bids`).innerHTML = totalValueBids.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        document.getElementById(`total_value_${coinType}_asks`).innerHTML = totalValueAsks.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+        labels.sort((a, b) => a - b);
+
+        const bidsChartData = labels.map(price => bidsData[price] || 0);
+        const asksChartData = labels.map(price => asksData[price] || 0);
+        const filledBidsChartData = labels.map(price => filledBidsData[price] || 0);
+        const filledAsksChartData = labels.map(price => filledAsksData[price] || 0);
+
+        const ctx = document.getElementById(`myPieChart${coinType}`).getContext('2d');
+        const bidsCtx = document.getElementById(`bidsChart${coinType}`).getContext('2d');
+
+        if (chartInstances['bidsChart' + coinType]) {
             chartInstances['bidsChart' + coinType].destroy();
-          }
-          if (chartInstances['myPieChart' + coinType]) {
+        }
+        if (chartInstances['myPieChart' + coinType]) {
             chartInstances['myPieChart' + coinType].destroy();
-          }
+        }
 
-          chartInstances['bidsChart' + coinType] = new Chart(bidsCtx, {
+        const bidsColors = labels.map(price => (price >= price_min && price <= price_max) ? 'lightblue' : 'rgba(54, 162, 235, 0.6)');
+        const asksColors = labels.map(price => (price >= price_min && price <= price_max) ? 'lightcoral' : 'red');
+
+        chartInstances['bidsChart' + coinType] = new Chart(bidsCtx, {
             type: 'bar',
             data: {
-              labels: labels,
-              datasets: [
-                {
-                  label: 'Bids',
-                  backgroundColor: 'rgba(54, 162, 235, 0.6)',
-                  data: bidsChartData
-                },
-                {
-                  label: 'Asks',
-                  backgroundColor: 'red',
-                  data: asksChartData
-                }
-              ]
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Bids',
+                        backgroundColor: bidsColors,
+                        data: bidsChartData
+                    },
+                    {
+                        label: 'Asks',
+                        backgroundColor: asksColors,
+                        data: asksChartData
+                    },
+                    {
+                        label: 'Filled Bids',
+                        backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                        data: filledBidsChartData
+                    },
+                    {
+                        label: 'Filled Asks',
+                        backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                        data: filledAsksChartData
+                    }
+                ]
             },
             options: {
-              responsive: true,
-              maintainAspectRatio: false,
-              scales: {
-                x: {
-                  title: {
-                    display: true,
-                    text: 'Price'
-                  }
-                },
-                y: {
-                  title: {
-                    display: true,
-                    text: 'Quantity'
-                  }
-                }
-              },
-              plugins: {
-                tooltip: {
-                  callbacks: {
-                    label: function (context) {
-                      const quantity = context.raw;
-                      return `Quantity: ${Math.round(quantity)}`;
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Price'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Quantity'
+                        }
                     }
-                  }
-                }
-              }
-            }
-          });
-
-          chartInstances['myPieChart' + coinType] = new Chart(ctx, {
-            type: 'pie',
-            data: {
-              labels: ['Asks', 'Bids'],
-              datasets: [{
-                data: [totalAsks, totalBids],
-                backgroundColor: ['#FF6384', '#36A2EB'],
-                hoverBackgroundColor: ['#FF6384', '#36A2EB']
-              }]
-            },
-            options: {
-              responsive: true,
-              plugins: {
-                legend: {
-                  position: 'top',
                 },
-                tooltip: {
-                  callbacks: {
-                    label: function (tooltipItem) {
-                      return tooltipItem.label + ': ' + tooltipItem.raw;
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function (context) {
+                                const quantity = context.raw;
+                                return `Quantity: ${Math.round(quantity)}`;
+                            }
+                        }
                     }
-                  }
                 }
-              }
             }
-          });
-
-        })
-        .catch(error => {
-          console.error('Error fetching data:', error);
-
-          const bidsCtx = document.getElementById('bidsChart' + coinType).getContext('2d');
-          const ctx = document.getElementById('myPieChart' + coinType).getContext('2d');
-
-          if (chartInstances['bidsChart' + coinType]) {
-            chartInstances['bidsChart' + coinType].destroy();
-          }
-          if (chartInstances['myPieChart' + coinType]) {
-            chartInstances['myPieChart' + coinType].destroy();
-          }
-
-          chartInstances['bidsChart' + coinType] = new Chart(bidsCtx, {
-            type: 'bar',
-            data: {
-              labels: [],
-              datasets: [
-                {
-                  label: 'Bids',
-                  backgroundColor: 'rgba(54, 162, 235, 0.6)',
-                  data: []
-                },
-                {
-                  label: 'Asks',
-                  backgroundColor: 'red',
-                  data: []
-                }
-              ]
-            },
-            options: {
-              responsive: true,
-              maintainAspectRatio: false,
-              scales: {
-                x: {
-                  title: {
-                    display: true,
-                    text: 'Price'
-                  }
-                },
-                y: {
-                  title: {
-                    display: true,
-                    text: 'Quantity'
-                  }
-                }
-              },
-              plugins: {
-                tooltip: {
-                  callbacks: {
-                    label: function (context) {
-                      const quantity = context.raw;
-                      return `Quantity: ${quantity}`;
-                    }
-                  }
-                }
-              }
-            }
-          });
-
-          chartInstances['myPieChart' + coinType] = new Chart(ctx, {
-            type: 'pie',
-            data: {
-              labels: ['Asks', 'Bids'],
-              datasets: [{
-                data: [0, 0],
-                backgroundColor: ['#FF6384', '#36A2EB'],
-                hoverBackgroundColor: ['#FF6384', '#36A2EB']
-              }]
-            },
-            options: {
-              responsive: true,
-              plugins: {
-                legend: {
-                  position: 'top',
-                },
-                tooltip: {
-                  callbacks: {
-                    label: function (tooltipItem) {
-                      return tooltipItem.label + ': ' + tooltipItem.raw;
-                    }
-                  }
-                }
-              }
-            }
-          });
-
-          chartInstances['bidsChart' + coinType] = bidsChart;
-          chartInstances['myPieChart' + coinType] = myPieChart;
         });
+
+        // chartInstances['myPieChart' + coinType] = new Chart(ctx, {
+        //     type: 'pie',
+        //     data: {
+        //         labels: ['Asks', 'Bids', 'Filled Asks', 'Filled Bids'],
+        //         datasets: [{
+        //             data: [totalAsks, totalBids, totalFilledValueAsks, totalFilledValueBids],
+        //             backgroundColor: ['#FF6384', '#36A2EB', '#FF9F40', '#4BC0C0'],
+        //             hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FF9F40', '#4BC0C0']
+        //         }]
+        //     },
+        //     options: {
+        //         responsive: true,
+        //         plugins: {
+        //             legend: {
+        //                 position: 'top',
+        //             },
+        //             tooltip: {
+        //                 callbacks: {
+        //                     label: function (tooltipItem) {
+        //                         return tooltipItem.label + ': ' + tooltipItem.raw;
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //     }
+        // });
     }
 
     // Reset alertShown flag when the selected date changes
