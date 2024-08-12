@@ -4781,7 +4781,7 @@
 
                   <!-- Title -->
                   <h4 class="card-header-title">
-                    OB FUTURES BTC
+                    CHART OPEN ORDERS
                   </h4>
                   <!-- Caption and Selectbox Container -->
                   <div class="d-flex align-items-center">
@@ -4796,7 +4796,6 @@
                   </select>
                 </div>
 
-
                 </div>
                 <div class="card-body">
 
@@ -4804,7 +4803,65 @@
                 <div class="chart">
                   <canvas id="bidsChartbtc"></canvas>
                 </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-xl-4">
 
+              <!-- Traffic -->
+              <div class="card">
+                <div class="card-header">
+
+                  <!-- Title -->
+                  <h4 class="card-header-title">
+                    PIE FUTURES BTC
+                  </h4>
+                </div>
+                <div class="card-body">
+
+                  <!-- Chart -->
+                  <div class="chart chart-appended">
+                    <canvas id="myPieChartbtc"></canvas>
+                  </div>
+
+                  <!-- Legend -->
+                  <div id="trafficChartLegend" class="chart-legend"></div>
+
+                </div>
+              </div>
+            </div>
+          </div> <!-- / .row -->
+          <div class="row">
+            <div class="col-12 col-xl-8">
+
+              <!-- Convertions -->
+              <div class="card">
+                <div class="card-header">
+
+                  <!-- Title -->
+                  <h4 class="card-header-title">
+                    CHART POSITIONS
+                  </h4>
+                  <!-- Caption and Selectbox Container -->
+                  <div class="d-flex align-items-center">
+                    <span id="datetime_btc_position" class="text-body-secondary me-3 text-nowrap">
+                      yyyy/mm/dd
+                    </span>
+
+                  <!-- Selectbox for specific dates -->
+                  <select id="dateRangeSelect_btc_position" class="form-select"
+                          onchange="updateChartsBasedOnSelectedDate('btc')">
+                    <!-- Options will be dynamically generated using JavaScript -->
+                  </select>
+                </div>
+
+                </div>
+                <div class="card-body">
+
+                <!-- Chart -->
+                <div class="chart">
+                  <canvas id="bidsChartbtcPosition"></canvas>
+                </div>
                 </div>
               </div>
             </div>
@@ -4946,7 +5003,7 @@
 
                       <!-- Title -->
                       <h4 class="card-header-title">
-                        Transactions Positions
+                        ORDERING POSITIONS
                       </h4>
 
                     </div>
@@ -6898,7 +6955,7 @@
 
                   <!-- Title -->
                   <h4 class="card-header-title">
-                    OB FUTURES BTC
+                    CHART OPEN ORDERS 
                   </h4>
                   <!-- Caption and Selectbox Container -->
                   <div class="d-flex align-items-center">
@@ -7216,7 +7273,7 @@
 
                       <!-- Title -->
                       <h4 class="card-header-title">
-                        Transactions Positions
+                        ORDERING POSITIONS
                       </h4>
 
                     </div>
@@ -8051,7 +8108,6 @@
             chartInstances['myPieChart' + coinType].destroy();
           }
 
-        console.log(1222222222222222222222)
           chartInstances['bidsChart' + coinType] = new Chart(bidsCtx, {
             type: 'bar',
             data: {
