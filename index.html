@@ -4857,6 +4857,11 @@
                         </a>
                       </th>
                       <th style="position: sticky; top: 0; font-size: 9px;">
+                        <a href="#" class="text-body-secondary list-sort" data-sort="time">
+                          Symbol
+                        </a>
+                      </th>
+                      <th style="position: sticky; top: 0; font-size: 9px;">
                         <a href="#" class="text-body-secondary list-sort" data-sort="type">
                           Type
                         </a>
@@ -5668,6 +5673,11 @@
                         </a>
                       </th>
                       <th style="position: sticky; top: 0; font-size: 9px;">
+                        <a href="#" class="text-body-secondary list-sort" data-sort="time">
+                          Symbol
+                        </a>
+                      </th>
+                      <th style="position: sticky; top: 0; font-size: 9px;">
                         <a href="#" class="text-body-secondary list-sort" data-sort="type">
                           Type
                         </a>
@@ -6473,6 +6483,11 @@
                       <th style="position: sticky; top: 0; font-size: 9px;">
                         <a href="#" class="text-body-secondary list-sort" data-sort="time">
                           Time
+                        </a>
+                      </th>
+                      <th style="position: sticky; top: 0; font-size: 9px;">
+                        <a href="#" class="text-body-secondary list-sort" data-sort="time">
+                          Symbol
                         </a>
                       </th>
                       <th style="position: sticky; top: 0; font-size: 9px;">
@@ -7942,6 +7957,7 @@
                   const columns = row.split(',');
                   if (columns.length === 5) {
                     const time = columns[0];
+                    const symbol = columns[1]
                     const quantity = parseFloat(columns[4]);
                     const type = columns[2];
                     const price = parseFloat(columns[3]);
@@ -7980,6 +7996,7 @@
                         row.className = 'tbody-row'; //  CSS
                         row.innerHTML = `
                                     <td>${displayTime}</td>
+                                    <td>${symbol}</td>
                                     <td class="${(type == 'bid' ? 'text-primary' : 'text-danger')}">${String(type).toUpperCase()}</td>
                                     <td>${price}</td>
                                     <td>${quantity}</td>
