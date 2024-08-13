@@ -1433,3 +1433,8 @@ and the repository exists.
  1 file changed, 9 insertions(+)
 To github.com:caotuanvu123/ob-btc-future.git
    12e8b97..657bc47  master -> master
+[master 15a288a] Auto commit at 2024-08-13 14:10:41
+ 5 files changed, 39 insertions(+)
+ create mode 100644 csv/spots/future_order_book_btcusdt_2024-08-13.csv
+To github.com:caotuanvu123/ob-btc-future.git
+   657bc47..15a288a  master -> master
