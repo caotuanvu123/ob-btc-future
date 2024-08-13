@@ -24,6 +24,12 @@
     body {
       display: none;
     }
+
+    #chart-tooltip {
+        max-width: 400px !important; /* Tăng chiều rộng */
+        width: auto !important;
+        white-space: normal !important; /* Cho phép xuống dòng */
+    }
   </style>
   <!-- Title -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -4807,7 +4813,6 @@
               </div>
             </div>
             <div class="col-12 col-xl-4">
-
               <!-- Traffic -->
               <div class="card">
                 <div class="card-header">
@@ -5480,7 +5485,6 @@
             </div>
           </div> <!-- / .row -->
         </div>
-      </div>
       <div class="tab-pane" id="eth" role="tabpanel" aria-labelledby="eth-tab">
         <div class="container-fluid">
           <div class="row">
@@ -5640,47 +5644,62 @@
               </div>
             </div>
             <div class="col-12 col-xl-4">
-
               <!-- Traffic -->
               <div class="card">
                 <div class="card-header">
 
                   <!-- Title -->
-                  <h4 class="card-header-title">
-                    PIE FUTURES ETH
+                  <h4 class="card-header-title" style="color: red;">
+                    TOP POSITIONS
                   </h4>
-
-
-                  <!-- Tabs -->
-                  <ul class="nav nav-tabs nav-tabs-sm card-header-tabs">
-                    <li class="nav-item" data-toggle="chart" data-target="#trafficChart" data-trigger="click"
-                      data-action="toggle" data-dataset="0">
-                      <a href="#" class="nav-link active" data-bs-toggle="tab">
-                        All
-                      </a>
-                    </li>
-                    <li class="nav-item" data-toggle="chart" data-target="#trafficChart" data-trigger="click"
-                      data-action="toggle" data-dataset="1">
-                      <a href="#" class="nav-link" data-bs-toggle="tab">
-                        Direct
-                      </a>
-                    </li>
-                  </ul>
-
                 </div>
                 <div class="card-body">
-
-                  <!-- Chart -->
-                  <div class="chart chart-appended">
-                    <canvas id="myPieCharteth"></canvas>
+                  <div class="list-group list-group-flush my-n3" id="tableContainerPosition"
+                     style="max-height: 324px; overflow-y: auto; position: relative;  max-width: 100%; overflow-x: hidden; ">
+                    <table class="table table-striped" style=" table-layout: fixed; width: 100%; ">
+                      <tr>
+                        <thead class="thead-light" style=" max-width: 100%" >
+                        <th style="position: sticky; top: 0; font-size: 9px;">
+                          <a href="#" class="text-body-secondary list-sort" data-sort="time">
+                            Time
+                          </a>
+                        </th>
+                        <th style="position: sticky; top: 0; font-size: 9px;">
+                          <a href="#" class="text-body-secondary list-sort" data-sort="time">
+                            Symbol
+                          </a>
+                        </th>
+                        <th style="position: sticky; top: 0; font-size: 9px;">
+                          <a href="#" class="text-body-secondary list-sort" data-sort="type">
+                            Type
+                          </a>
+                        </th>
+                        <th style="position: sticky; top: 0; font-size: 9px;">
+                          <a href="#" class="text-body-secondary list-sort" data-sort="quantity">
+                            Price
+                          </a>
+                        </th>
+                        <th style="position: sticky; top: 0; font-size: 9px;">
+                          <a href="#" class="text-body-secondary list-sort" data-sort="price">
+                            Quantity
+                          </a>
+                        </th>
+                        <th style="position: sticky; top: 0; font-size: 9px; ">
+                          <a href="#" class="text-body-secondary list-sort" data-sort="totalValue">
+                            Total Value
+                          </a>
+                        </th>
+                      </tr>
+                      </thead>
+                      <tbody id="ethDataTablePosition" style="font-size: 10px; max-width: 100%; ">
+                      </tbody>
+                    </table>
                   </div>
-
-                  <!-- Legend -->
-                  <div id="trafficChartLegend" class="chart-legend"></div>
-
-                </div>
+                  <!-- List group -->
+                  </div> <!-- / .card-body -->
+                </div> <!-- / .card -->
+                  
               </div>
-            </div>
           </div> <!-- / .row -->
           <div class="row">
             <div class="col-12 col-xl-4">
@@ -6437,11 +6456,11 @@
                     </span>
 
                     <!-- Selectbox for specific dates -->
-                    <select id="dateRangeSelect_sol" class="form-select">
+                    <select id="dateRangeSelect_sol" class="form-select"
+                      onchange="updateChartsBasedOnSelectedDate('sol')">
                       <!-- Options will be dynamically generated using JavaScript -->
                     </select>
                   </div>
-
 
                 </div>
                 <div class="card-body">
@@ -6455,46 +6474,62 @@
               </div>
             </div>
             <div class="col-12 col-xl-4">
-
               <!-- Traffic -->
               <div class="card">
                 <div class="card-header">
 
                   <!-- Title -->
-                  <h4 class="card-header-title">
-                    PIE FUTURES SOL
+                  <h4 class="card-header-title" style="color: red;">
+                    TOP POSITIONS
                   </h4>
-
-                  <!-- Tabs -->
-                  <ul class="nav nav-tabs nav-tabs-sm card-header-tabs">
-                    <li class="nav-item" data-toggle="chart" data-target="#trafficChart" data-trigger="click"
-                      data-action="toggle" data-dataset="0">
-                      <a href="#" class="nav-link active" data-bs-toggle="tab">
-                        All
-                      </a>
-                    </li>
-                    <li class="nav-item" data-toggle="chart" data-target="#trafficChart" data-trigger="click"
-                      data-action="toggle" data-dataset="1">
-                      <a href="#" class="nav-link" data-bs-toggle="tab">
-                        Direct
-                      </a>
-                    </li>
-                  </ul>
-
                 </div>
                 <div class="card-body">
-
-                  <!-- Chart -->
-                  <div class="chart chart-appended">
-                    <canvas id="myPieChartsol"></canvas>
+                  <div class="list-group list-group-flush my-n3" id="tableContainerPosition"
+                     style="max-height: 324px; overflow-y: auto; position: relative;  max-width: 100%; overflow-x: hidden; ">
+                    <table class="table table-striped" style=" table-layout: fixed; width: 100%; ">
+                      <tr>
+                        <thead class="thead-light" style=" max-width: 100%" >
+                        <th style="position: sticky; top: 0; font-size: 9px;">
+                          <a href="#" class="text-body-secondary list-sort" data-sort="time">
+                            Time
+                          </a>
+                        </th>
+                        <th style="position: sticky; top: 0; font-size: 9px;">
+                          <a href="#" class="text-body-secondary list-sort" data-sort="time">
+                            Symbol
+                          </a>
+                        </th>
+                        <th style="position: sticky; top: 0; font-size: 9px;">
+                          <a href="#" class="text-body-secondary list-sort" data-sort="type">
+                            Type
+                          </a>
+                        </th>
+                        <th style="position: sticky; top: 0; font-size: 9px;">
+                          <a href="#" class="text-body-secondary list-sort" data-sort="quantity">
+                            Price
+                          </a>
+                        </th>
+                        <th style="position: sticky; top: 0; font-size: 9px;">
+                          <a href="#" class="text-body-secondary list-sort" data-sort="price">
+                            Quantity
+                          </a>
+                        </th>
+                        <th style="position: sticky; top: 0; font-size: 9px; ">
+                          <a href="#" class="text-body-secondary list-sort" data-sort="totalValue">
+                            Total Value
+                          </a>
+                        </th>
+                      </tr>
+                      </thead>
+                      <tbody id="solDataTablePosition" style="font-size: 10px; max-width: 100%; ">
+                      </tbody>
+                    </table>
                   </div>
-
-                  <!-- Legend -->
-                  <div id="myPieCharteth" class="chart-legend"></div>
-
-                </div>
+                  <!-- List group -->
+                  </div> <!-- / .card-body -->
+                </div> <!-- / .card -->
+                  
               </div>
-            </div>
           </div> <!-- / .row -->
           <div class="row">
             <div class="col-12 col-xl-4">
@@ -7751,7 +7786,6 @@
           </div> <!-- / .row -->
         </div>
       </div>
-    </div>
   </div>
   </div><!-- / .main-content -->
 
@@ -7873,6 +7907,7 @@
   function updateChartsBasedOnSelectedDate(coinType) {
     const selectedDate = document.getElementById(`dateRangeSelect_${coinType}`).value;
     document.getElementById(`datetime_${coinType}`).textContent = selectedDate;
+    console.log(`selectedDate ${selectedDate}`)
     chartShow(coinType, selectedDate);
   }
 
@@ -7881,8 +7916,7 @@
     const spanElement = document.getElementById(spanId);
 
     selectElement.addEventListener('change', function () {
-      updateChartsBasedOnSelectedDate(coinType, selectedDate);
-      startUpdatingData(coinType, selectedDate); // Start updating data
+      updateChartsBasedOnSelectedDate(coinType);
     });
 
     spanElement.textContent = new Date().toISOString().split('T')[0].replace(/-/g, '/');
@@ -7939,8 +7973,6 @@
     generateDateOptions('dateRangeSelect_eth');
     generateDateOptions('dateRangeSelect_sol');
 
-
-
     updateChartsBasedOnSelectedDate('btc');
 
   });
@@ -7950,7 +7982,7 @@
   function onCoinTypeChange(newCoinType) {
     const today = new Date();
     const formattedDate = today.toISOString().split('T')[0].replace(/-/g, '/');
-    updateChartsBasedOnSelectedDate(newCoinType, formattedDate);
+    updateChartsBasedOnSelectedDate(newCoinType);
   }
 
   // Event listeners for navigation or tab changes
@@ -8279,11 +8311,16 @@
     function loadDataAndVisualize() {
         fetch(csvFilePath)
             .then(response => {
+                console.log(`Fetching data from: ${csvFilePath}`); // Log path to check
                 if (!response.ok) {
-                    throw new Error('File not found');
+                  if (!alertShown[coinType]) {
+                    alert(`Current data is not available for ${coinType.toUpperCase()} on ${selectedDate}`);
+                    alertShown[coinType] = true;
+                  }
+                  throw new Error('File not found');
                 }
                 return response.text();
-            })
+              })
             .then(data => {
                 let rows = data.split('\n');
                 tableBody.innerHTML = '';
@@ -8343,13 +8380,19 @@
 
                 fetch(filledCsvFilePath)
                     .then(response => {
-                        if (!response.ok) {
-                            throw new Error('File not found');
-                        }
-                        return response.text();
+                      console.log(`Fetching data from: ${filledCsvFilePath}`); // Log path to check
+                      if (!response.ok) {
+                        // if (!alertShown[coinType]) {
+                        //   alert(`Current data filled is not available for ${coinType.toUpperCase()} on ${selectedDate}`);
+                        //   alertShown[coinType] = true;
+                        // }
+                        console.log(`File ${filledCsvFilePath} not found`);
+                      }
+                      return response.text();
                     })
                     .then(filledData => {
                         let filledRows = filledData.split('\n');
+                        if (filledRows.length < 5) return 
                         tableBodyPosition.innerHTML = '';
 
                         filledRows.reverse();
@@ -8413,7 +8456,15 @@
                 console.error('Error fetching data:', error);
             });
     }
-
+    function formatValue(value) {
+        if (value >= 1e9) {
+            return (value / 1e9).toFixed(2) + 'B'; // Chuyển đổi thành tỷ
+        } else if (value >= 1e6) {
+            return (value / 1e6).toFixed(2) + 'M'; // Chuyển đổi thành triệu
+        } else {
+            return value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+    }
     function updateChartsAndTable() {
         document.getElementById(`total_value_${coinType}`).innerHTML = (totalValueAsks + totalValueBids).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         document.getElementById(`total_value_${coinType}_bids`).innerHTML = totalValueBids.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -8426,7 +8477,7 @@
         const filledBidsChartData = labels.map(price => filledBidsData[price] || 0);
         const filledAsksChartData = labels.map(price => filledAsksData[price] || 0);
 
-        const ctx = document.getElementById(`myPieChart${coinType}`).getContext('2d');
+        // const ctx = document.getElementById(`myPieChart${coinType}`).getContext('2d');
         const bidsCtx = document.getElementById(`bidsChart${coinType}`).getContext('2d');
 
         if (chartInstances['bidsChart' + coinType]) {
@@ -8485,11 +8536,24 @@
                 },
                 plugins: {
                     tooltip: {
+                        padding: 15,
+                        boxPadding: 10,
                         callbacks: {
                             label: function (context) {
+                                const type = context.dataset.label;
                                 const quantity = context.raw;
-                                return `Quantity: ${Math.round(quantity)}`;
+                                const price = context.label;
+                                const totalValue = price * quantity;
+                                const formattedTotalValue = formatValue(totalValue);
+                                const paddingSpaces = " ".repeat(20);
+                                return `${type}: Quantity = ${Math.round(quantity)}, Total = $${formattedTotalValue}`;
                             }
+                        },
+                        bodyFont: {
+                            size: 14
+                        },
+                        titleFont: {
+                            size: 16
                         }
                     }
                 }
