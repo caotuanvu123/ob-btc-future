@@ -1420,3 +1420,12 @@ To github.com:caotuanvu123/ob-btc-future.git
  7 files changed, 307 insertions(+), 25 deletions(-)
 To github.com:caotuanvu123/ob-btc-future.git
    a9e2255..5db56d8  master -> master
+On branch master
+Your branch is up to date with 'origin/master'.
+
+nothing to commit, working tree clean
+ssh: Could not resolve hostname github.com: Temporary failure in name resolution
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
