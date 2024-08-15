@@ -2177,3 +2177,10 @@ To github.com:caotuanvu123/ob-btc-future.git
  5 files changed, 273 insertions(+)
 To github.com:caotuanvu123/ob-btc-future.git
    b273172..1abc3e4  master -> master
+[master bc87789] Auto commit at 2024-08-15 20:20:41
+ 2 files changed, 169 insertions(+)
+ssh: Could not resolve hostname github.com: Temporary failure in name resolution
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
