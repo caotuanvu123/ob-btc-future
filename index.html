@@ -7902,7 +7902,7 @@
 
 
   updatePricesAndBadges();
-  setInterval(updatePricesAndBadges, 60000); // Cập nhật mỗi phút
+  // setInterval(updatePricesAndBadges, 600000); // Cập nhật mỗi phút
 
   function updateChartsBasedOnSelectedDate(coinType) {
     const selectedDate = document.getElementById(`dateRangeSelect_${coinType}`).value;
@@ -8110,7 +8110,7 @@
                     })
                     .then(filledData => {
                         let filledRows = filledData.split('\n');
-                        if (filledRows.length < 5) return 
+                        // if (filledRows.length < 5) return 
                         tableBodyPosition.innerHTML = '';
 
                         filledRows.reverse();
