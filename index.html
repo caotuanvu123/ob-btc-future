@@ -7888,11 +7888,6 @@
     const previousPriceValue = parseFloat(previousPrice);
     const currentPriceValue = parseFloat(currentPrice);
 
-    // Log giá trước và sau khi cập nhật màu sắc
-    // console.log(`Price Comparison for Element: ${element.getAttribute('data-symbol')}`);
-    // console.log(`Previous Price: ${previousPriceValue}`);
-    // console.log(`Current Price: ${currentPriceValue}`);
-
     if (currentPriceValue > previousPriceValue) {
       element.style.color = 'green';
     } else if (currentPriceValue < previousPriceValue) {
@@ -7928,13 +7923,6 @@
     initializeDateRangeUpdater('dateRangeSelect_eth', 'datetime_eth', 'eth');
     initializeDateRangeUpdater('dateRangeSelect_sol', 'datetime_sol', 'sol');
 
-    // function formatDate(date) {
-    //   const year = date.getFullYear();
-    //   const month = String(date.getMonth() + 1).padStart(2, '0');
-    //   const day = String(date.getDate()).padStart(2, '0');
-    //   return `${year}-${month}-${day}`;
-    // }
-
     function formatDate(date) {
       const year = date.getUTCFullYear();
       const month = String(date.getUTCMonth() + 1).padStart(2, '0');
@@ -7957,16 +7945,6 @@
         option.textContent = formattedDate;
         selectElement.appendChild(option);
       }
-      // for (let i = 0; i < 30; i++) {
-      //   const date = new Date(today);
-      //   date.setDate(today.getDate() - i);
-      //   const formattedDate = formatDate(date);
-
-      //   const option = document.createElement('option');
-      //   option.value = formattedDate;
-      //   option.textContent = formattedDate;
-      //   selectElement.appendChild(option);
-      // }
     }
 
     generateDateOptions('dateRangeSelect_btc');
@@ -8100,10 +8078,6 @@
                     .then(response => {
                       console.log(`Fetching data from: ${filledCsvFilePath}`); // Log path to check
                       if (!response.ok) {
-                        // if (!alertShown[coinType]) {
-                        //   alert(`Current data filled is not available for ${coinType.toUpperCase()} on ${selectedDate}`);
-                        //   alertShown[coinType] = true;
-                        // }
                         console.log(`File ${filledCsvFilePath} not found`);
                       }
                       return response.text();
@@ -8277,33 +8251,6 @@
                 }
             }
         });
-
-        // chartInstances['myPieChart' + coinType] = new Chart(ctx, {
-        //     type: 'pie',
-        //     data: {
-        //         labels: ['Asks', 'Bids', 'Filled Asks', 'Filled Bids'],
-        //         datasets: [{
-        //             data: [totalAsks, totalBids, totalFilledValueAsks, totalFilledValueBids],
-        //             backgroundColor: ['#FF6384', '#36A2EB', '#FF9F40', '#4BC0C0'],
-        //             hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FF9F40', '#4BC0C0']
-        //         }]
-        //     },
-        //     options: {
-        //         responsive: true,
-        //         plugins: {
-        //             legend: {
-        //                 position: 'top',
-        //             },
-        //             tooltip: {
-        //                 callbacks: {
-        //                     label: function (tooltipItem) {
-        //                         return tooltipItem.label + ': ' + tooltipItem.raw;
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //     }
-        // });
     }
 
     // Reset alertShown flag when the selected date changes
