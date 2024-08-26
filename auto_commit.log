@@ -8174,3 +8174,8 @@ To github.com:caotuanvu123/ob-btc-future.git
  create mode 100644 csv/futures/future_order_book_solusdt_2024-08-26.csv
 To github.com:caotuanvu123/ob-btc-future.git
    ad4485d2..11a54a7e  master -> master
+[master 2fddde7e] Auto commit at 2024-08-26 07:10:41
+ 7 files changed, 563 insertions(+)
+ create mode 100644 csv/spots/future_order_book_solusdt_2024-08-26.csv
+To github.com:caotuanvu123/ob-btc-future.git
+   11a54a7e..2fddde7e  master -> master
