@@ -10494,3 +10494,9 @@ To github.com:caotuanvu123/ob-btc-future.git
  2 files changed, 12 insertions(+)
 To github.com:caotuanvu123/ob-btc-future.git
    c6c0e4d5..19fab50d  master -> master
+[master daa7abac] Auto commit at 2024-08-30 07:10:41
+ 3 files changed, 33 insertions(+)
+ create mode 100644 csv/futures/future_order_book_btcusdt_2024-08-30.csv
+ create mode 100644 csv/futures/future_order_book_ethusdt_2024-08-30.csv
+To github.com:caotuanvu123/ob-btc-future.git
+   19fab50d..daa7abac  master -> master
