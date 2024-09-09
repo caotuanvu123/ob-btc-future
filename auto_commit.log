@@ -16868,3 +16868,57 @@ an editor opened by 'git commit'. Please make sure all processes
 are terminated then try again. If it still fails, a git process
 may have crashed in this repository earlier:
 remove the file manually to continue.
+fatal: Unable to create '/home/u/Documents/product_2024/ob-btc-future/.git/index.lock': File exists.
+
+Another git process seems to be running in this repository, e.g.
+an editor opened by 'git commit'. Please make sure all processes
+are terminated then try again. If it still fails, a git process
+may have crashed in this repository earlier:
+remove the file manually to continue.
+fatal: Unable to create '/home/u/Documents/product_2024/ob-btc-future/.git/index.lock': File exists.
+
+Another git process seems to be running in this repository, e.g.
+an editor opened by 'git commit'. Please make sure all processes
+are terminated then try again. If it still fails, a git process
+may have crashed in this repository earlier:
+remove the file manually to continue.
+fatal: Unable to create '/home/u/Documents/product_2024/ob-btc-future/.git/index.lock': File exists.
+
+Another git process seems to be running in this repository, e.g.
+an editor opened by 'git commit'. Please make sure all processes
+are terminated then try again. If it still fails, a git process
+may have crashed in this repository earlier:
+remove the file manually to continue.
+fatal: Unable to create '/home/u/Documents/product_2024/ob-btc-future/.git/index.lock': File exists.
+
+Another git process seems to be running in this repository, e.g.
+an editor opened by 'git commit'. Please make sure all processes
+are terminated then try again. If it still fails, a git process
+may have crashed in this repository earlier:
+remove the file manually to continue.
+On branch master
+Your branch is ahead of 'origin/master' by 1 commit.
+  (use "git push" to publish your local commits)
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   auto_commit.log
+
+no changes added to commit (use "git add" and/or "git commit -a")
+[master e3bf4987] Auto commit at 2024-09-10 01:30:54
+ 1 file changed, 59 insertions(+)
+Everything up-to-date
+Everything up-to-date
+To github.com:caotuanvu123/ob-btc-future.git
+   d741f379..e3bf4987  master -> master
+To github.com:caotuanvu123/ob-btc-future.git
+ ! [remote rejected]   master -> master (cannot lock ref 'refs/heads/master': is at e3bf498774e6364a192e2ae8d9a9ee6db4a77023 but expected d741f379cae60f0c734330e7875290825e8a055b)
+error: failed to push some refs to 'github.com:caotuanvu123/ob-btc-future.git'
+fatal: Unable to create '/home/u/Documents/product_2024/ob-btc-future/.git/index.lock': File exists.
+
+Another git process seems to be running in this repository, e.g.
+an editor opened by 'git commit'. Please make sure all processes
+are terminated then try again. If it still fails, a git process
+may have crashed in this repository earlier:
+remove the file manually to continue.
