@@ -17011,3 +17011,37 @@ an editor opened by 'git commit'. Please make sure all processes
 are terminated then try again. If it still fails, a git process
 may have crashed in this repository earlier:
 remove the file manually to continue.
+fatal: Unable to create '/home/u/Documents/product_2024/ob-btc-future/.git/index.lock': File exists.
+
+Another git process seems to be running in this repository, e.g.
+an editor opened by 'git commit'. Please make sure all processes
+are terminated then try again. If it still fails, a git process
+may have crashed in this repository earlier:
+remove the file manually to continue.
+fatal: Unable to create '/home/u/Documents/product_2024/ob-btc-future/.git/index.lock': File exists.
+
+Another git process seems to be running in this repository, e.g.
+an editor opened by 'git commit'. Please make sure all processes
+are terminated then try again. If it still fails, a git process
+may have crashed in this repository earlier:
+remove the file manually to continue.
+fatal: Unable to create '/home/u/Documents/product_2024/ob-btc-future/.git/index.lock': File exists.
+
+Another git process seems to be running in this repository, e.g.
+an editor opened by 'git commit'. Please make sure all processes
+are terminated then try again. If it still fails, a git process
+may have crashed in this repository earlier:
+remove the file manually to continue.
+[master 8dd6d344] Auto commit at 2024-09-10 03:26:11
+ 1 file changed, 73 insertions(+)
+To github.com:caotuanvu123/ob-btc-future.git
+ ! [remote rejected]   master -> master (cannot lock ref 'refs/heads/master': is at 41df88aed1cf8210da563bf8fe9a4cb8a2e06eae but expected bb8f842e86bc8ccd82472aa2891e411a02cf77d0)
+error: failed to push some refs to 'github.com:caotuanvu123/ob-btc-future.git'
+To github.com:caotuanvu123/ob-btc-future.git
+   bb8f842e..41df88ae  master -> master
+To github.com:caotuanvu123/ob-btc-future.git
+ ! [remote rejected]   master -> master (cannot lock ref 'refs/heads/master': is at 41df88aed1cf8210da563bf8fe9a4cb8a2e06eae but expected bb8f842e86bc8ccd82472aa2891e411a02cf77d0)
+error: failed to push some refs to 'github.com:caotuanvu123/ob-btc-future.git'
+To github.com:caotuanvu123/ob-btc-future.git
+ ! [remote rejected]   master -> master (cannot lock ref 'refs/heads/master': is at 41df88aed1cf8210da563bf8fe9a4cb8a2e06eae but expected bb8f842e86bc8ccd82472aa2891e411a02cf77d0)
+error: failed to push some refs to 'github.com:caotuanvu123/ob-btc-future.git'
