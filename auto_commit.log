@@ -17928,3 +17928,10 @@ To github.com:caotuanvu123/ob-btc-future.git
 error: failed to push some refs to 'github.com:caotuanvu123/ob-btc-future.git'
 [master 0fd61f6b] Auto commit at 2024-09-10 16:50:51
  1 file changed, 44 insertions(+)
+[master 55e39fc6] Auto commit at 2024-09-10 16:50:51
+ 1 file changed, 2 insertions(+)
+To github.com:caotuanvu123/ob-btc-future.git
+   9629794c..0fd61f6b  master -> master
+To github.com:caotuanvu123/ob-btc-future.git
+ ! [remote rejected]   master -> master (cannot lock ref 'refs/heads/master': is at 0fd61f6bac8821b6ef2bf75d9a732d4e3078e09b but expected 9629794c141f37c230e099385695636bdf130b8d)
+error: failed to push some refs to 'github.com:caotuanvu123/ob-btc-future.git'
