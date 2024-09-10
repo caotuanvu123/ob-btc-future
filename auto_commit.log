@@ -17544,3 +17544,13 @@ an editor opened by 'git commit'. Please make sure all processes
 are terminated then try again. If it still fails, a git process
 may have crashed in this repository earlier:
 remove the file manually to continue.
+[master b6fc30d9] Auto commit at 2024-09-10 11:35:03
+ 1 file changed, 94 insertions(+)
+To github.com:caotuanvu123/ob-btc-future.git
+   96724892..9c747bf5  master -> master
+To github.com:caotuanvu123/ob-btc-future.git
+ ! [remote rejected]   master -> master (cannot lock ref 'refs/heads/master': is at 9c747bf54c98b378352c3646e494379cdd58f79c but expected 96724892c3b4ae9890439225ee495e64a3c628ee)
+error: failed to push some refs to 'github.com:caotuanvu123/ob-btc-future.git'
+To github.com:caotuanvu123/ob-btc-future.git
+ ! [remote rejected]   master -> master (cannot lock ref 'refs/heads/master': is at 9c747bf54c98b378352c3646e494379cdd58f79c but expected 96724892c3b4ae9890439225ee495e64a3c628ee)
+error: failed to push some refs to 'github.com:caotuanvu123/ob-btc-future.git'
