@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Volume and Order Book Charts</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+    <style>
+        #orderBookChart {
+            display: none; /* Initially hide the Order Book chart */
+        }
+        #symbolLabel {
+            text-align: center;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="volumeChart" width="800" height="200"></canvas>
+    <canvas id="topPERCENTChart" width="800" height="100"></canvas>
+    <!-- <div id="symbolLabel" style="font-size: 14px;">Top OB - Symbol: </div> -->
+    <canvas id="orderBookChart" width="800" height="100"></canvas>
+    <canvas id="topOIChart" width="800" height="100"></canvas>
+    <canvas id="fundingRateChart" width="800" height="100"></canvas>
+
+    <script>
+        // Sample CSV Data
+        const csvData = `symbol,priceChange,priceChangePercent,weightedAvgPrice,prevClosePrice,lastPrice,lastQty,bidPrice,bidQty,askPrice,askQty,openPrice,highPrice,lowPrice,volume,quoteVolume,openTime,closeTime,firstId,lastId,count,OI
+TRXUSDT,0.0174,12.159,0.15330254,0.143,0.1605,64.8,0.1604,291203.1,0.1605,1115431.0,0.1431,0.1618,0.1429,1762821135.5,270244965.862872,2024-08-20 03:27:44.299,2024-08-21 03:27:44.299,290350602,290911807,561206,145167160027.0
+PEPEUSDT,3e-08,0.389,7.92e-06,7.71e-06,7.74e-06,1907181.0,7.74e-06,27088905575.0,7.75e-06,14427899062.0,7.71e-06,8.29e-06,7.63e-06,29534603900808.0,234003550.88234204,2024-08-20 03:27:44.876,2024-08-21 03:27:44.876,159949255,160456507,507253,18312876963
+WIFUSDT,0.088,6.044,1.55534492,1.456,1.544,392.39,1.544,4384.16,1.545,18980.18,1.456,1.622,1.45,109830139.8,170823749.74438,2024-08-20 03:27:44.940,2024-08-21 03:27:44.940,117940103,118513234,573132,6842730132
+XRPUSDT,-0.0066,-1.091,0.60182834,0.6051,0.5985,44.0,0.5984,83099.0,0.5985,90272.0,0.6051,0.615,0.5875,273352552.0,164511313.9264,2024-08-20 03:27:41.534,2024-08-21 03:27:41.534,651510711,651942030,431320,4423889062
+RAREUSDT,0.0411,19.544,0.23382016,0.2104,0.2514,2347.0,0.2514,720.9,0.2515,829.3,0.2103,0.2713,0.2014,640214880.1,149695146.94085,2024-08-20 03:27:44.735,2024-08-21 03:27:44.735,28004294,29268461,1264168,4128751788
+VOXELUSDT,0.068,49.133,0.22756652,0.1382,0.2064,17.0,0.2062,767.3,0.2063,3263.9,0.1384,0.278,0.138,391103627.1,89002091.79658,2024-08-20 03:27:44.527,2024-08-21 03:27:44.527,25404762,25908138,503377,3877105112
+FLOKIUSDT,7.9e-06,6.725,0.00012586,0.00011749,0.00012538,1476160.0,0.00012536,838032.0,0.00012537,10149964.0,0.00011748,0.00013379,0.00011738,585167778864.0,73651517.49978222,2024-08-20 03:27:44.899,2024-08-21 03:27:44.899,1182010721,1189671081,7660361,3770270675
+AAVEUSDT,8.47,6.814,128.09660577,124.26,132.77,0.2,132.76,4.724,132.77,1.4,124.3,133.42,123.15,540247.124,69203822.86212,2024-08-20 03:27:44.855,2024-08-21 03:27:44.855,136892005,137243929,351925,3370270675
+DOGEUSDT,-0.0003,-0.288,0.10405367,0.10426,0.10396,6204.0,0.10396,16735.0,0.10397,94969.0,0.10426,0.10569,0.10113,605053961.0,62958082.90516,2024-08-20 03:27:44.873,2024-08-21 03:27:44.873,657887465,658336294,448830,3270270675
+1000SATSUSDT,6.4e-06,2.195,0.00029583,0.0002916,0.000298,3757963.0,0.0002979,25706166.0,0.000298,2377325.0,0.0002916,0.000305,0.0002848,208672464135.0,61731376.5856182,2024-08-20 03:27:44.863,2024-08-21 03:27:44.863,84820029,85372614,552586,3770270675
+SYSUSDT,-0.0432,-23.176,0.1592475,0.1864,0.1432,607.0,0.1432,36613.0,0.1433,2475.0,0.1864,0.189,0.1402,327895598.0,52216555.5946,2024-08-20 03:27:44.861,2024-08-21 03:27:44.861,23967294,24205414,238121,3170270675
+SUIUSDT,-0.0368,-4.039,0.88745491,0.9107,0.8743,52.2,0.8746,6308.9,0.8747,876.1,0.9111,0.9295,0.8618,56506361.0,50146847.33101,2024-08-20 03:27:44.861,2024-08-21 03:27:44.861,87544237,87732166,187930,2770270675
+AVAXUSDT,1.16,5.341,22.15225237,21.72,22.88,7.65,22.87,1792.38,22.88,1051.08,21.72,22.93,21.47,2192812.77,48575741.8911,2024-08-20 03:27:44.880,2024-08-21 03:27:44.880,287806374,287987642,181269,2970270675
+BOMEUSDT,0.000129,1.852,0.00712931,0.006966,0.007095,27805.0,0.007096,85435.0,0.007097,337119.0,0.006966,0.007292,0.006916,6495798853.0,46310592.225144,2024-08-20 03:27:44.663,2024-08-21 03:27:44.663,83597814,84004452,406639,4770270675
+NOTUSDT,-0.0001,-0.926,0.01077476,0.01081,0.0107,100437.0,0.01069,2513028.0,0.0107,5065278.0,0.0108,0.01103,0.01046,4279847623.0,46114351.5119,2024-08-20 03:27:44.251,2024-08-21 03:27:44.251,77039199,77198245,159047,5770270675
+SUNUSDT,0.00413,35.758,0.01419184,0.01153,0.01568,23304.0,0.01568,263262.0,0.01569,9795.0,0.01155,0.01665,0.01129,2934386790.0,41644355.764224,2024-08-20 03:27:44.897,2024-08-21 03:27:44.897,30747205,30973633,226429,6770270675
+CRVUSDT,0.026,8.615,0.31573849,0.3019,0.3278,10333.5,0.3277,164.8,0.3278,10684.0,0.3018,0.3425,0.2935,126836307.9,40047104.23888,2024-08-20 03:27:44.515,2024-08-21 03:27:44.515,132047937,132222803,174867,8770270675
+FETUSDT,-0.037,-4.048,0.89168558,0.914,0.877,2881.6,0.877,14823.2,0.878,40848.1,0.914,0.926,0.862,40126333.4,35780072.7946,2024-08-20 03:27:44.913,2024-08-21 03:27:44.913,145467127,145594955,127829,6470270675
+BAKEUSDT,-0.0686,-19.645,0.29532803,0.3496,0.2806,3550.6,0.2804,1454.0,0.2806,3990.1,0.3492,0.3538,0.274,119605632.3,35322895.79105,2024-08-20 03:27:44.910,2024-08-21 03:27:44.910,89663285,89897924,234640,2270270675
+MATICUSDT,0.026,5.955,0.45009741,0.4366,0.4626,17694.3,0.4626,6320.0,0.4627,30758.9,0.4366,0.4669,0.4356,74705556.1,33624777.16801,2024-08-20 03:27:44.831,2024-08-21 03:27:44.831,407981647,408171399,189753,5470270675
+BONKUSDT,2e-08,0.11,1.841e-05,1.817e-05,1.819e-05,549753.0,1.818e-05,823611713.0,1.819e-05,407751404.0,1.817e-05,1.91e-05,1.766e-05,1821727844579.0,33539690.53991281,2024-08-20 03:27:44.920,2024-08-21 03:27:44.920,498670151,500703919,2033769,6670270675`; // Add your full CSV data here
+
+        const topOI = `symbol,openInterest
+1000SATSUSDT,145167160027.0
+1000PEPEUSDT,18312876963.0
+REEFUSDT,6842730132.0
+BOMEUSDT,4423889062.0
+MEWUSDT,4128751788.0
+NOTUSDT,3877105112.0
+DENTUSDT,3770270675.0
+SPELLUSDT,3463562368.0
+LEVERUSDT,2550492389.0
+1000SHIBUSDT,2302423253.0
+HOTUSDT,2205291808.0
+TURBOUSDT,1935530240.0
+RSRUSDT,1219905594.0
+LINAUSDT,1213186625.0
+1000BONKUSDT,1190810128.0
+STMXUSDT,1154115695.0
+DOGEUSDT,1116489811.0
+GALAUSDT,1021995108.0
+1000PEPEUSDC,754520039.0
+KEYUSDT,698380952.0
+MEMEUSDT,684175203.0
+TRXUSDT,623404183.0
+JASMYUSDT,580159943.0
+CKBUSDT,579188136.0
+AMBUSDT,576320937.0
+TLMUSDT,486663181.0
+XVGUSDT,465790065.0
+IOSTUSDT,409259433.0
+PEOPLEUSDT,384972834.0
+VETUSDT,324602957.0
+ONEUSDT,282553861.0
+XRPUSDT,272860407.7
+BEAMXUSDT,266202058.0
+REZUSDT,261338592.0
+ZILUSDT,252191227.0
+RVNUSDT,239228610.0
+TUSDT,224873931.0
+1000FLOKIUSDT,223929979.0
+ARPAUSDT,212130572.0
+RAREUSDT,209511877.0
+CELRUSDT,207306740.0
+HBARUSDT,184646944.0
+BOMEUSDC,179855739.0
+XEMUSDT,174867276.0
+ZKUSDT,169367577.0
+TOKENUSDT,160794870.0
+CHZUSDT,150678778.0
+USTCUSDT,148142895.0
+CRVUSDT,136359484.1
+1000LUNCUSDT,134906982.0
+`;
+        // Parse CSV Data
+        const rows = csvData.trim().split('\n').slice(1);
+
+        const rowsOI = topOI.trim().split('\n').slice(1);
+        // console.log(rowsOI)
+        const labels = [];
+        const volumes = [];
+        const colors = [];
+        const labelsPercent = [];
+        const oi = [];
+        const top_percent = []
+        
+        var oi_dataset = []
+        rowsOI.forEach(row => {
+            const cols = row.split(',');
+            const person = {value:cols[1]};
+            oi_dataset[cols[0]] = person
+
+        })
+
+        rows.forEach(row => {
+            const cols = row.split(',');
+            labels.push(cols[0]); // Symbol
+            volumes.push(parseFloat(cols[15])); // Volume
+            const priceChangePercent = parseFloat(cols[2]);
+            colors.push(priceChangePercent >= 0 ? 'rgba(75, 192, 192, 0.2)' : 'rgba(255, 99, 132, 0.2)');
+            labelsPercent.push(priceChangePercent.toFixed(2) + '%'); // Formatted percentage
+            var oiValue = 0
+            // console.log(cols[cols.length - 1])
+
+            if (oi_dataset[cols[0]]) {
+                oiValue = parseFloat(oi_dataset[cols[0]]['value']);
+            }
+            oi.push(oiValue); // Chuyển OI sang log scale
+            top_percent.push(priceChangePercent)
+        });
+
+        // Main Volume Chart
+        const ctxVolume = document.getElementById('volumeChart').getContext('2d');
+        const volumeChart = new Chart(ctxVolume, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Volume',
+                    data: volumes,
+                    backgroundColor: colors,
+                    borderColor: colors.map(color => color.replace('0.2', '1')),
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            title: function(tooltipItems) {
+                                return tooltipItems[0].label; // Symbol
+                            },
+                            label: function(tooltipItem) {
+                                const dataIndex = tooltipItem.dataIndex;
+                                const volume = tooltipItem.raw;
+                                const priceChangePercent = labelsPercent[dataIndex];
+                                return [
+                                    `Volume: ${volume.toLocaleString()}`,
+                                    `Price Change: ${priceChangePercent}`
+                                ];
+                            }
+                        }
+                    }
+                },
+                onHover: function(event, elements) {
+                    if (elements.length) {
+                        const index = elements[0].index;
+                        const symbol = labels[index];
+                        // Fetch and display order book data for the selected symbol
+                        updateOrderBookChart(symbol);
+                    }
+                }
+            }
+        });
+
+        // Order Book Data
+        const orderBookData = {
+            TRXUSDT: {
+                bids: [
+                    { price: 0.15921, quantity: 698826 },
+                    { price: 0.15842, quantity: 684150 },
+                    { price: 0.15824, quantity: 798227 }
+                ],
+                asks: [
+                    { price: 0.161, quantity: 757489 },
+                    { price: 0.16117, quantity: 757113 },
+                    { price: 0.1629, quantity: 739394 },
+                    { price: 0.164, quantity: 683576 }
+                ]
+            },
+            PEPEUSDT: { bids: [], asks: [] }, // Add real data
+            WIFUSDT: { bids: [], asks: [] } // Add real data
+        };
+
+        const ctxOI = document.getElementById('topOIChart').getContext('2d');
+        const topOIChart = new Chart(ctxOI, {
+            type: 'bar',
+            data: {
+                labels: labels, // Dùng chung labels từ biểu đồ Volume
+                datasets: [{
+                    label: 'Top OI',
+                    data: oi,
+                    backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                    borderColor: 'rgba(153, 102, 255, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        display: false, // Display labels on the Top OI chart as well
+                    },
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true // Display the legend for clarity
+                    }
+                }
+            }
+        });
+        
+
+        const ctxPc = document.getElementById('topPERCENTChart').getContext('2d');
+        const topPERCENTChart = new Chart(ctxPc, {
+            type: 'bar',
+            data: {
+                labels: labels, // Dùng chung labels từ biểu đồ Volume
+                datasets: [{
+                    label: 'Top Percentage',
+                    data: top_percent,
+                    backgroundColor: colors,
+                    borderColor: colors.map(color => color.replace('0.2', '1')),
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        display: false, // Display labels on the Top OI chart as well
+                    },
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true // Display the legend for clarity
+                    }
+                }
+            }
+        });
+
+        // Detail Order Book Chart
+        const ctxOrderBook = document.getElementById('orderBookChart').getContext('2d');
+        const orderBookChart = new Chart(ctxOrderBook, {
+            type: 'bar',
+            data: {
+                labels: [],
+                datasets: [
+                    {
+                        label: 'Bids',
+                        data: [],
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Asks',
+                        data: [],
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                return `${tooltipItem.dataset.label}: ${tooltipItem.raw}`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Price'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Quantity'
+                        },
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        const symbols = ['TRXUSDT', 'PEPEUSDT', 'WIFUSDT', 'XRPUSDT', 'RAREUSDT', 'VOXELUSDT', 'FLOKIUSDT', 'AAVEUSDT', 'DOGEUSDT', '1000SATSUSDT', 'SYSUSDT', 'SUIUSDT', 'AVAXUSDT', 'BOMEUSDT', 'NOTUSDT', 'SUNUSDT', 'CRVUSDT', 'FETUSDT', 'BAKEUSDT', 'MATICUSDT', 'BONKUSDT'];
+        const fundingRates = [0.02, 0.015, 0.018, -0.1, 0.2, 0.04, 0.15, -0.2, 0.5, 0.2, 0.15, 0.23, 0.018, -0.1, 0.2, 0.04, 0.15, -0.2, 0.018, -0.1, 0.2]; // Chỉ số funding rate
+        const pointColors = fundingRates.map(rate => rate < 0 ? 'red' : 'rgba(54, 162, 235, 1)');
+        const ctxFundingRate = document.getElementById('fundingRateChart').getContext('2d');
+
+        const fundingRateChart = new Chart(ctxFundingRate, {
+            type: 'line',
+            data: {
+                labels: symbols,
+                datasets: [{
+                    label: 'Funding Rate',
+                    data: fundingRates,
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    fill: false,
+                    tension: 0.1,
+                    pointBackgroundColor: pointColors,
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                return `Funding Rate: ${tooltipItem.raw.toFixed(4)}`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Symbol'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Funding Rate'
+                        },
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+
+        function updateOrderBookChart(symbol) {
+            const data = orderBookData[symbol];
+            if (data) {
+                orderBookChart.data.labels = [
+                    ...data.bids.map(bid => bid.price.toFixed(5)), // Price for bids
+                    ...data.asks.map(ask => ask.price.toFixed(5))  // Price for asks
+                ];
+                orderBookChart.data.datasets[0].data = data.bids.map(bid => bid.quantity); // Quantity for bids
+                orderBookChart.data.datasets[1].data = data.asks.map(ask => ask.quantity); // Quantity for asks
+                orderBookChart.update();
+                document.getElementById('orderBookChart').style.display = 'block'; // Show the chart
+                // document.getElementById('symbolLabel').textContent = `Top OB - Symbol: ${symbol}`;
+            }
+        }
+
+        // Update order book chart based on hover
+        volumeChart.options.plugins.tooltip.callbacks.title = function(tooltipItems) {
+            const index = tooltipItems[0].dataIndex;
+            const symbol = labels[index];
+            updateOrderBookChart(symbol);
+            return tooltipItems[0].label; // Symbol
+        };
+    </script>
+</body>
+</html>
